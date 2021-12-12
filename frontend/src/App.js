@@ -3,13 +3,24 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import Login from './Pages/login.js';
+import Signup from './Pages/signup.js';
+import Try from './Pages/try.js';
+
 
 function App() {
+  
+  const email = useState('')
+  const password = useState('')
+
+  const readDetails =  () => {
+    console.log(email)
+  }
+
   return (
     <div className="App">
-      <div className='App list-group-item justify-content-center align-items-center mx-auto' style={{"width":"400px", "backgroundColor":"white", "marginTop":"15px"}}>
-        <h1 className="card text-white bg-primary mb-1" styleName="max-width: 20rem;">Task Manager</h1>
-      </div>
+      <Login />
+      <Signup />
     </div>
   );
 }
