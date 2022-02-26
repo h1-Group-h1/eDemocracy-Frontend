@@ -9,10 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import Login from './Pages/login.js';
 import Signup from './Pages/signup.js';
+import Home from './Pages/home.js'
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
+      <Route exact path="/" element={<Home />} />
       <Route exact path="/login" element={<Login />} />
       <Route exact path="/signup" element={<Signup />} />
     </Routes>

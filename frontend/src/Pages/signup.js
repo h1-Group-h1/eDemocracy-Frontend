@@ -5,6 +5,8 @@ import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 
 function Signup() {
 
+    let navigate = useNavigate();
+
     function sendSignUpData(){
         
         const userData = {
@@ -34,6 +36,12 @@ function Signup() {
         )
         
         if (valid){
+            var data = {
+                name: userData.name,
+                email: userData.email,
+                pw:userData.password,
+                organisations: [userData.organisation]
+            }
             console.log('all good, sending post...')            
             const request = new XMLHttpRequest();
             request.open("POST", 'http://localhost:8000/users/add');
@@ -47,9 +55,13 @@ function Signup() {
             );
             request.onload = () => {
                 var data = JSON.parse(request.response);
-                console.log(data);
+                console.log('recieved: ', request.status);
+                if (request.status == 200){
+                    // success
+                    navigate('/login')
+                }
             }
-            request.send(JSON.stringify(userData))
+            request.send(JSON.stringify(data))
         }
 
         
