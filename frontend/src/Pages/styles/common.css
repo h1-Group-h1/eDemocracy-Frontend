@@ -1,5 +1,57 @@
-.button{
-    border-radius: 50px;
+html, body, .root{
+    height: 100%;
+    margin-top: 0px !important;
+}
+
+.cont{
+    width: 400px;
+    height: 90%;
+    background-color: rgb(241, 241, 241);
+    margin: auto;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%);
+    padding: 30px 30px 10px 30px;
+    border-radius: 30px;
+}
+
+.pollsCont{
     width: 100%;
-    text-align: center;
+    min-height: 50px;
+    background-color: rgb(216, 216, 216);
+    border-radius: 15px;
+    margin: 20px 0;
+    padding: 20px 0;
+}
+
+.pollBlock{
+    width: 90%;
+    padding: 10px;
+    background-color: rgb(241, 241, 241);
+    border-radius: 15px;
+    margin: auto;
+    transition: 0.15s ease-in-out;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0);
+}
+.pollBlock:hover{
+    background-color: #ffffff;
+    cursor: pointer;
+}
+.pollBlock:active{
+    border-color: #212529;
+    border-style: solid;
+}
+
+.flex{
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+    display: flex;
+}
+
+.flex-bottom{
+    justify-content: flex-end;
 }

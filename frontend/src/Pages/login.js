@@ -3,6 +3,7 @@ import React, { useState} from 'react';
 // import './/styles/common.css';
 import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
+import UserProfile  from './userProfile';
 
 function Login() {
 
@@ -48,17 +49,22 @@ function Login() {
             );
             request.onload = () => {
                 console.log('recieved: ', request.status);
+                var responseData = JSON.parse(request.response);
                 if (request.status == 200){
                     // success
-                    // we need to store user data in local storage
-                    console.log(JSON.parse(request.response));
+                    UserProfile.setLoggedIn(true);
+                    UserProfile.setName(responseData.name);
+                    UserProfile.setEmail(responseData.email);
+                    UserProfile.setPassword(responseData.password);
+                    UserProfile.setOrganisations(responseData.organisations);
+                    console.log(responseData);
                     navigate('/');
                 }else{
                     invalidCred("Login failed. Email or password is incorrect");
                     setTimeout(() => {
                         invalidCred("")
                     }, 2000)
-                    console.log('ERROR: ', request.status, '\n', JSON.parse(request.response));
+                    console.log('ERROR: ', request.status, '\n', responseData);
                 }
             }
             request.send()

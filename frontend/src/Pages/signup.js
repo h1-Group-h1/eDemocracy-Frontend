@@ -28,32 +28,43 @@ function Signup() {
 
         var valid = true;
 
+        var email_pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if(userData.email === ''){
+            console.log('email cannot be left blank');
+            valid = false;
+            emailError("Email cannot be left blank");
+        }
+        else if (!email_pattern.test(userData.email)){
+            console.log('invalid email format');
+            valid = false;
+            emailError("Email is invalid");
+        }
+        else{emailError("");}
+
         if(userData.name === ''){
-            console.log("Name field left blank"); valid = false;
+            console.log("Name field left blank");
+            valid = false;
             nameError("Name cannot be left blank");
         }
         else{nameError("");}
 
-        if(userData.email ===''){
-            console.log("Email field left blank"); valid = false;
-            emailError("Email cannot be left blank");
-        }
-        else{emailError("");}
-
         if(userData.organisation ===''){
-            console.log("Organisation field left blank"); valid = false;
+            console.log("Organisation field left blank");
+            valid = false;
             orgError("Organisation cannot be left blank"); 
         }
         else{orgError("");}
 
         if (userData.password != userData.confPassword){
-            console.log('passwords dont match'); valid = false;
+            console.log('passwords dont match');
+            valid = false;
             confError("Passwords do not match");
         }
         else{confError("");}
 
         if (userData.password.length < 9){
-            console.log('password too short'); valid = false;
+            console.log('password too short');
+            valid = false;
             passError("Password must be 9 or more characters");
         }
         else{passError("");}

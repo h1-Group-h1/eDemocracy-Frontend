@@ -4,7 +4,7 @@ import React, { useState, byRef} from 'react';
 import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 
-function Signup() {
+function Forgot() {
 
     let navigate = useNavigate();
 
@@ -28,11 +28,11 @@ function Signup() {
 
             <span className='spacer'></span>
 
-            <button className='button' onClick={() => {sendResetData()}}>Sign me up</button>
+            <button className='button' onClick={() => {sendResetData()}}>Send Email</button>
 
 
         </div>
     )
 }
 
-export default Signup;
+export default Forgot;
