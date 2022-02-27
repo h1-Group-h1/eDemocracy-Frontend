@@ -55,3 +55,25 @@ html, body, .root{
 .flex-bottom{
     justify-content: flex-end;
 }
+
+.dropdown{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.dropdown > span{
+    display: inline-block;
+}
+.dropdown > select{
+    display: inline-block;
+    justify-content: flex-end;
+    background-color: #ecbbff;
+    border: none;
+    padding: 5px;
+    border-radius: 15px;
+    width: 100px;
+    text-align: center;
+}
+

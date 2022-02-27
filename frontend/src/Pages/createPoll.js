@@ -7,16 +7,20 @@ import UserProfile from './userProfile';
 function CreatePoll() {
 
     return(
-        <div className='App list-group-item justify-content-center align-items-center mx-auto' style={{"width":"400px", "backgroundColor":"white", "marginTop":"15px"}}>
-            <h1 className="card text-white bg-primary mb-3" styleName="max-width: 20rem;">Create Poll</h1>
+        <div className='cont'>
+            <h1 className="h1">Create Poll</h1>
 
             <input id='name' className='inputField' placeholder='Name'/>
             <input id='description' className='inputField' placeholder='Description'/>
-            <select id="anonymous">
-                <option value='Anonymous' disabled>Anonymous</option>
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
+            <div className='dropdown'>
+                <span>Anonymous: </span>
+                <select id="anonymous">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+            <input id='date' className='inputField' placeholder='DD/MM/YYYY'/>
+            
         </div>
     )
     
