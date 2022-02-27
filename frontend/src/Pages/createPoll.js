@@ -1,10 +1,21 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './/styles/common.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile from './userProfile';
 
 function CreatePoll() {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    useEffect(()=>{    
+        if (!UserProfile.getLoggedIn()){
+            navigate('/login');
+        }else{
+            // run any code (particularly http requests) here
+        }
+    })
 
     return(
         <div className='cont'>

@@ -1,20 +1,21 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './/styles/common.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile from './userProfile';
 
 function Home() {
+
     const navigate = useNavigate();
     const location = useLocation();
 
-    console.log(
-        UserProfile.getLoggedIn(),
-        UserProfile.getName(),
-        UserProfile.getEmail(),
-        UserProfile.getPassword(),
-        UserProfile.getOrganisations()
-    )
+    useEffect(()=>{    
+        if (!UserProfile.getLoggedIn()){
+            navigate('/login');
+        }else{
+            // run any code (particularly http requests) here
+        }
+    })
 
     return(
         <div className='cont'>
@@ -24,6 +25,6 @@ function Home() {
             <button className='button' onClick={() => {navigate("/polls" + location.search);}}>Polls</button>
         </div>
     )
-    
+
 }
 export default Home;

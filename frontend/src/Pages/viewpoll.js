@@ -1,45 +1,51 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './/styles/common.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile from './userProfile';
+import {Requests} from './httpRequest';
 
 function ViewPolls() {
 
-    const URLparams = new URLSearchParams(window.location.search);
-    var pollKey = URLparams.get('poll');
-
-    var request = new XMLHttpRequest();
-    request.open("GET", `http://localhost:8000/poll/${pollKey}`);
-    request.setRequestHeader(
-        'Content-Type',
-        'application/json;charset=UTF-8'
-    );
-    request.setRequestHeader(
-        'Authorization',
-        'Basic ' + btoa(`${UserProfile.getEmail()}:${UserProfile.getPassword()}`)
-    );
-    request.onload = () => {
-        console.log('recieved: ', request.status);
-        var responseData = JSON.parse(request.response);
-        if (request.status == 200){
-            // success
-            var poll = JSON.parse(request.response);
-            console.log(poll);
-        }else{
-            console.log('failed to get poll')
-        }
-    }
-    request.send();
-
     const navigate = useNavigate();
     const location = useLocation();
+    
+    useEffect(()=>{    
+        if (!UserProfile.getLoggedIn()){
+            navigate('/login');
+        }else{
+            
+            const URLparams = new URLSearchParams(window.location.search);
+            var pollKey = URLparams.get('poll');
+
+            const request = new Requests();
+            function displayPoll(poll){
+                console.log(poll);
+                
+                document.getElementById('pollName').innerHTML = poll.name;
+                document.getElementById('pollDescr').innerHTML = poll.description;
+                if (poll.anonymous){
+                    document.getElementById('pollAnon').innerHTML = "The creator cannot see who has responded to this poll.";
+                }else{
+                    document.getElementById('pollAnon').innerHTML = "The creator can see your email if you respond to this poll.";
+                }
+                document.getElementById('creationDate').innerHTML = `Created:<br/>${String(poll.start_time.day).padStart(2, 0)}/${String(poll.start_time.month).padStart(2, 0)}/${String(poll.start_time.year).padStart(4, 0)} ${String(poll.start_time.hours).padStart(2, 0)}:${String(poll.start_time.minutes).padStart(2, 0)}`;
+                document.getElementById('expirationDate').innerHTML = `Ends:<br/>${String(poll.end_time.day).padStart(2, 0)}/${String(poll.end_time.month).padStart(2, 0)}/${String(poll.end_time.year).padStart(4, 0)} ${String(poll.end_time.hours).padStart(2, 0)}:${String(poll.end_time.minutes).padStart(2, 0)}`;
+            }
+            request.getRequest(`poll/${pollKey}`, displayPoll, null, UserProfile.getEmail, UserProfile.getPassword);
+
+        }
+    })
 
     return(
         <div className='cont'>
             <div className='flex'>
                 <div className='flex-top'>
-                    <h1 className="h1">Polls</h1>
+                    <h1 className="h1"><span id='pollName'>Loading</span></h1>
+                    <div className='pollDescr' id='pollDescr'></div>
+                    <div className='pollDescr' id='pollAnon' style={{'fontStyle': 'italic'}}></div>
+                    <div className='pollDescr' id='creationDate'></div>
+                    <div className='pollDescr' id='expirationDate'></div>
                 </div>
                 <div className='flex-bottom'>
                 </div>

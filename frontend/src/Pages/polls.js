@@ -1,71 +1,74 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './/styles/common.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile from './userProfile';
+import {Requests} from './httpRequest';
 
 function Polls() {
 
-    //get all polls
-
-    var polls = []
-
-    // check for polls every 5 seconds
-    var getPolls = () => {
-        var request = new XMLHttpRequest();
-        request.open("GET", 'http://localhost:8000/polls');
-        request.setRequestHeader(
-            'Content-Type',
-            'application/json;charset=UTF-8'
-        );
-        request.setRequestHeader(
-            'Authorization',
-            'Basic ' + btoa(`${UserProfile.getEmail()}:${UserProfile.getPassword()}`)
-        );
-        request.onload = () => {
-            console.log('recieved: ', request.status);
-            var responseData = JSON.parse(request.response);
-            if (request.status == 200){
-                // success
-                var pollsCont = document.getElementById('pollsCont');
-                var pollKeys = Array.from({length: polls.length}, (_, i) => polls[i].key);
-                responseData.forEach(poll => {
-                    if (!(pollKeys.includes(poll.key))){
-                        var pollBlock = document.createElement("div");
-                        pollBlock.id = poll.key;
-                        pollBlock.classList = "pollBlock";
-                        pollBlock.innerHTML = `${poll.name} by ${poll.organisation_key}`;
-                        pollBlock.onclick = ()=>{
-                            //navigate to poll's page
-                            console.log('you clicked on poll', poll.key)
-                            clearInterval(checkPollsInterval);
-                            navigate('/viewpoll' + `?poll=${poll.key}`);
-                        };
-                        pollsCont.appendChild(pollBlock);
-                    }
-                });
-                var pollKeys = Array.from({length: responseData.length}, (_, i) => responseData[i].key);
-                polls.forEach(poll => {
-                    if (!(pollKeys.includes(poll.key))){
-                        console.log('poll needs to be removed');
-                        var pollBlock = document.getElementById(poll.key);
-                        pollBlock.remove();
-                    }
-                })
-                polls = responseData;
-                console.log(polls)
-            }else{
-                console.log('failed to get polls')
-            }
-        }
-        request.send();
-    }
-
-    getPolls()
-    var checkPollsInterval = setInterval(() => {getPolls()}, 5000);
-
     const navigate = useNavigate();
     const location = useLocation();
+    
+    useEffect(()=>{
+        document.getElementById('pollsCont').innerHTML = '';
+        if (!UserProfile.getLoggedIn()){
+            navigate('/login');
+        }else{
+
+            //get all polls
+        
+            var polls = []
+        
+            // check for polls every 5 seconds
+            var getPolls = () => {
+
+                const request = new Requests();
+                function displayPolls(responseData){
+                    var pollsCont = document.getElementById('pollsCont');
+                    var pollKeys = Array.from({length: polls.length}, (_, i) => polls[i].key);
+                    responseData.forEach(poll => {
+                        if (!(pollKeys.includes(poll.key))){
+                            var pollBlock = document.createElement("div");
+                            pollBlock.id = poll.key;
+                            pollBlock.classList = "pollBlock";
+                            pollBlock.innerHTML = `${poll.name} by ${poll.organisation_key}`;
+                            pollBlock.onclick = ()=>{
+                                //navigate to poll's page
+                                console.log('you clicked on poll', poll.key)
+                                clearInterval(checkPollsInterval);
+                                navigate('/viewpoll' + `?poll=${poll.key}`);
+                            };
+                            pollsCont.appendChild(pollBlock);
+                        }
+                    });
+                    var pollKeys = Array.from({length: responseData.length}, (_, i) => responseData[i].key);
+                    polls.forEach(poll => {
+                        if (!(pollKeys.includes(poll.key))){
+                            console.log('poll needs to be removed');
+                            var pollBlock = document.getElementById(poll.key);
+                            pollBlock.remove();
+                        }
+                    })
+                    polls = responseData;
+                    console.log(polls)
+                }
+                function failPolls(responseData){
+                    console.log('failed to get polls');
+                }
+                request.getRequest('polls', displayPolls, failPolls, UserProfile.getEmail, UserProfile.getPassword);
+            }
+        
+            getPolls()
+            var checkPollsInterval = setInterval(() => {getPolls()}, 5000);
+            return () => {
+                console.log('clearing');
+                clearInterval(checkPollsInterval);
+            }
+        }
+    })
+    
+
 
     return(
         <div className='cont'>

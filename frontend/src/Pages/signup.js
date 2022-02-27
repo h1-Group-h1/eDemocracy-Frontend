@@ -3,6 +3,8 @@ import React, { useState, byRef} from 'react';
 // import './/styles/common.css';
 import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
+import UserProfile from './userProfile';
+import {Requests} from './httpRequest';
 
 function Signup() {
 
@@ -80,23 +82,17 @@ function Signup() {
                 password: userData.password,
                 organisations: [userData.organisation]
             }
-            console.log('all good, sending post...')            
-            const request = new XMLHttpRequest();
-            request.open("POST", 'http://localhost:8000/users/add');
-            request.setRequestHeader(
-                'Content-Type',
-                'application/json;charset=UTF-8'
-            );
-            request.onload = () => {
-                console.log('recieved: ', request.status);
-                if (request.status == 200){
-                    // success
-                    navigate('/login')
-                }else{
-                    console.log('ERROR: ', request.status, '\n', JSON.parse(request.response))
-                }
+            console.log('all good, sending post...')  
+            function logIn (responseData) {
+                UserProfile.setLoggedIn(true);
+                UserProfile.setName(responseData.name);
+                UserProfile.setEmail(responseData.email);
+                UserProfile.setPassword(responseData.password);
+                UserProfile.setOrganisations(responseData.organisations);
+                navigate('/');
             }
-            request.send(JSON.stringify(data))
+            const request = new Requests();
+            request.postRequest('users/add', data, logIn, null, data.email, data.password);
         }
 
         

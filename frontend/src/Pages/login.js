@@ -4,6 +4,7 @@ import React, { useState} from 'react';
 import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile  from './userProfile';
+import { Requests} from './httpRequest';
 
 function Login() {
 
@@ -37,37 +38,23 @@ function Login() {
         
         if (valid){
             console.log('all good, sending get...');
-            const request = new XMLHttpRequest();
-            request.open("GET", 'http://localhost:8000/users/{key}');
-            request.setRequestHeader(
-                'Content-Type',
-                'application/json;charset=UTF-8'
-            );
-            request.setRequestHeader(
-                'Authorization',
-                'Basic ' + btoa(`${userData.email}:${userData.password}`)
-            );
-            request.onload = () => {
-                console.log('recieved: ', request.status);
-                var responseData = JSON.parse(request.response);
-                if (request.status == 200){
-                    // success
-                    UserProfile.setLoggedIn(true);
-                    UserProfile.setName(responseData.name);
-                    UserProfile.setEmail(responseData.email);
-                    UserProfile.setPassword(responseData.password);
-                    UserProfile.setOrganisations(responseData.organisations);
-                    console.log(responseData);
-                    navigate('/');
-                }else{
-                    invalidCred("Login failed. Email or password is incorrect");
-                    setTimeout(() => {
-                        invalidCred("")
-                    }, 2000)
-                    console.log('ERROR: ', request.status, '\n', responseData);
-                }
+            const request = new Requests();
+            function logIn(responseData){
+                UserProfile.setLoggedIn(true);
+                UserProfile.setName(responseData.name);
+                UserProfile.setEmail(responseData.email);
+                UserProfile.setPassword(responseData.password);
+                UserProfile.setOrganisations(responseData.organisations);
+                console.log(responseData);
+                navigate('/');
             }
-            request.send()
+            function failLogIn(responseData){
+                invalidCred("Login failed. Email or password is incorrect");
+                setTimeout(() => {
+                    invalidCred("")
+                }, 2000)
+            }
+            request.getRequest('users/{key}', logIn, failLogIn, userData.email, userData.password);
         }
 
         
