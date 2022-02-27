@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
 
 import Login from './Pages/login.js';
 import Signup from './Pages/signup.js';
 import Home from './Pages/home.js'
+import Forgot from './Pages/forgot.js'
 
 ReactDOM.render(
   <BrowserRouter>
@@ -17,6 +17,7 @@ ReactDOM.render(
       <Route exact path="/" element={<Home />} />
       <Route exact path="/login" element={<Login />} />
       <Route exact path="/signup" element={<Signup />} />
+      <Route exact path="/forgot" element={<Forgot />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
