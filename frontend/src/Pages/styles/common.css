@@ -31,7 +31,7 @@ html, body, .root{
     padding: 10px;
     background-color: rgb(241, 241, 241);
     border-radius: 15px;
-    margin: auto;
+    margin: 5px auto;
     transition: 0.15s ease-in-out;
     border-width: 1px;
     border-style: solid;
@@ -55,6 +55,11 @@ html, body, .root{
 
 .flex-bottom{
     justify-content: flex-end;
+}
+
+.flex-bottom-fill{
+    flex: 1 1 auto;
+    margin-bottom: 20px;
 }
 
 .dropdown{
@@ -82,4 +87,34 @@ html, body, .root{
     text-align: center;
     width: 100%;
     padding: 20px 0px;
+}
+
+.pollChoice{
+    width: 90%;
+    background-color: rgb(241, 241, 241);
+    border-radius: 15px;
+    padding: 10px 0;
+    margin: 5px auto;
+    text-align: center;
+    transition: 0.15s ease-in-out;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0);
+
+}
+.pollChoice:hover{
+    background-color: #ffffff;
+    cursor: pointer;
+}.pollChoice:active{
+    border-color: #212529;
+    border-style: solid;
+}
+
+.pollChoicesCont{
+    width: 90%;
+    margin: auto;
+    background-color: rgb(216, 216, 216);
+    max-height: 100%;
+    border-radius: 15px;
+    padding:10px;
 }

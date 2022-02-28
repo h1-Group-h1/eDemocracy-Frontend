@@ -1,40 +1,41 @@
 var UserProfile = (function() {
-    var loggedIn = false;
-    var name = "";
-    var email = "";
-    var password = "";
-    var organisations = [];
+    const stor = window.localStorage;
+    // var loggedIn = false;
+    // var name = "";
+    // var email = "";
+    // var password = "";
+    // var organisations = [];
     
     var getLoggedIn = () => {
-        return loggedIn;
+        return Boolean(stor.getItem('loggedIn'));
     }
     var getName = () => {
-        return name;
+        return stor.getItem('name');
     }
     var getEmail = () => {
-        return email;
+        return stor.getItem('email');
     }
     var getPassword = () => {
-        return password;
+        return stor.getItem('password');
     }
     var getOrganisations = () => {
-        return organisations;
+        return JSON.parse(stor.getItem('organisations'));
     }
 
     var setLoggedIn = function(data){
-        loggedIn = data;
+        stor.setItem('loggedIn', data);
     }
     var setName = (data) => {
-        name = data;
+        stor.setItem('name', data);
     }
     var setEmail = (data) => {
-        email = data;
+        stor.setItem('email', data);
     }
     var setPassword = (data) => {
-        password = data;
+        stor.setItem('password', data);
     }
     var setOrganisations = (data) => {
-        organisations = data;
+        stor.setItem('organisations', data);
     }
 
     return {
