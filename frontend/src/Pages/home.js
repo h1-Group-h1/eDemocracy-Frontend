@@ -29,9 +29,6 @@ function Home() {
     return(
         <div className='cont'>
             <h1 className="h1">Home</h1>
-            <span className='spacer'></span>
-            {/* <button className='button' onClick={() => {navigate("/login" + location.search);}}>Login</button>
-            <button className='button' onClick={() => {navigate("/signup" + location.search);}}>Sign Up</button> */}
             <button className='button' onClick={() => {navigate("/polls" + location.search);}}>Polls</button>
             <button className='button' onClick={() => {signOut()}}>Sign Out</button>
         </div>
