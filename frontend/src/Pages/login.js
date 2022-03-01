@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-// import './/styles/common.css';
-import './/styles/loginSignup.css';
+import './/styles/common.css';
+// import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile  from './userProfile';
 import { Requests} from './httpRequest';

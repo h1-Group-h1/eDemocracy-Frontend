@@ -43,6 +43,14 @@ function ViewPolls() {
                     choiceBlock.innerHTML = choice.description;
                     choiceBlock.classList = 'pollChoice';
                     choiceBlock.id = choice.id;
+                    choiceBlock.addEventListener('click', ()=>{
+                        // add vote 
+                        const voteRequest = new Requests();
+                        function voteCallback(responseData){
+                            console.log(responseData);
+                        }
+                        voteRequest.postRequest(`polls/add_vote/${poll.key}/${choice.id}`, null, voteCallback, null, UserProfile.email, UserProfile.password);
+                    });
                     choicesCont.appendChild(choiceBlock);
                 });
 
@@ -57,11 +65,12 @@ function ViewPolls() {
             <div className='flex'>
                 <div className='flex-top'>
                     <h1 className="h1"><span id='pollName'>Loading</span></h1>
-                    <div className='pollDescr' id='pollOrg'></div>
+                    <div className='pollDescr' id='pollOrg'>Organisation:</div>
                     <div className='pollDescr' id='pollDescr'></div>
                     <div className='pollDescr' id='pollAnon' style={{'fontStyle': 'italic'}}></div>
                     <div className='pollDescr' id='creationDate'></div>
                     <div className='pollDescr' id='expirationDate'></div>
+                    <div className='pollDescr'>Vote for your choice:</div>
                 </div>
                 <div className='flex-bottom-fill'>
                     <div className='pollChoicesCont' id='choicesCont'></div>

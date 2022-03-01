@@ -7,7 +7,7 @@ var UserProfile = (function() {
     // var organisations = [];
     
     var getLoggedIn = () => {
-        return Boolean(stor.getItem('loggedIn'));
+        return stor.getItem('loggedIn') === 'true';
     }
     var getName = () => {
         return stor.getItem('name');
