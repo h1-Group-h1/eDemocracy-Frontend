@@ -70,19 +70,19 @@ function Login() {
 
 
             <div className='inputCont'>
-                {email && <span className='email errorTag'>{email}</span>}
+                <span className='errorCont'>{email && <span className='email errorTag'>{email}</span>}</span>
                 <input  id='email' className='inputField' placeholder='Email' />
             </div>
             
             <div className='inputCont'>
-                {password && <span className='password errorTag'>{password}</span>}
+                <span className='errorCont'>{password && <span className='password errorTag'>{password}</span>}</span>
                 <input id='password' className='inputField' placeholder='Password' type="password" />
             </div>
             
             <span className='spacer'></span>
 
             <div>
-                {credentials && <span className='credentials errorTag'>{credentials}</span>}
+            <span className='errorCont'>{credentials && <span className='credentials errorTag'>{credentials}</span>}</span>
             </div>
 
             <button className='button' onClick={() => sendLoginData()}>Login</button>

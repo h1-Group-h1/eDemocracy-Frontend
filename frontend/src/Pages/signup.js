@@ -103,27 +103,27 @@ function Signup() {
             <h1 className="h1">Sign Up</h1>
 
             <div className='inputCont'>
-                {name && <span className='name errorTag'>{name}</span>}
+                <span className='errorCont'>{name && <span className='name errorTag'>{name}</span>}</span>
                 <input id='name' className='inputField' placeholder='Name' />
             </div>
 
             <div className='inputCont'>
-                {email && <span className='email errorTag'>{email}</span>}
+                <span className='errorCont'>{email && <span className='email errorTag'>{email}</span>}</span>
                 <input id='email' className='inputField' placeholder='Email' />
             </div>
 
             <div className='inputCont'>
-                {password && <span className='password errorTag'>{password}</span>}
+                <span className='errorCont'>{password && <span className='password errorTag'>{password}</span>}</span>
                 <input id='password' className='inputField' placeholder='Password' type="password" />
             </div>
 
             <div className='inputCont'>
-                {confpassword && <span className='confpassword errorTag'>{confpassword}</span>}
+                <span className='errorCont'>{confpassword && <span className='confpassword errorTag'>{confpassword}</span>}</span>
                 <input id='conf-password' className='inputField' placeholder='Confirm Password' type="password"/>
             </div>
 
             <div className='inputCont'>
-                {organisation && <span className='organisation errorTag'>{organisation}</span>}
+                <span className='errorCont'>{organisation && <span className='organisation errorTag'>{organisation}</span>}</span>
                 <input id='organisation' className='inputField' placeholder='Organisation' />
             </div>
 
