@@ -15,7 +15,32 @@ function Signup() {
     const[organisation, orgError] = useState("");
     const[password, passError] = useState("");
     const[confpassword, confError] = useState("");
-
+    
+    function getOrgs(input){
+        const text = input.target.value;
+        const cont = document.getElementById('searchSuggest');
+        const contcont = document.getElementById('searchSuggestCont')
+        cont.innerHTML = '';
+        contcont.style.display = 'none';
+        const callback = (responseData) => {
+            responseData.forEach(element => {
+                const suggestion = document.createElement('div');
+                suggestion.innerHTML = element.name;
+                suggestion.id = element.key;
+                suggestion.className = 'suggestion';
+                suggestion.addEventListener('click', ()=>{
+                    input.target.value = element.name;
+                });
+                cont.appendChild(suggestion);
+                contcont.style.display = 'flex';
+            });
+        }
+        if (text.length > 3){
+            const request = new Requests();
+            request.getRequest(`organisations/search_orgs/${text}`, callback, null);
+        }
+    }
+    
     function sendSignUpData(){
         
         const userData = {
@@ -25,11 +50,33 @@ function Signup() {
             confPassword: document.getElementById('conf-password').value,
             organisation: document.getElementById('organisation').value,
         }
-
+                    
+        const sendRequest = () => {
+            if (valid){
+                var data = {
+                    name: userData.name,
+                    email: userData.email,
+                    password: userData.password,
+                    organisations: [userData.organisation]
+                }
+                console.log('all good, sending post...')  
+                function logIn (responseData) {
+                    UserProfile.setLoggedIn(true);
+                    UserProfile.setName(responseData.name);
+                    UserProfile.setEmail(responseData.email);
+                    UserProfile.setPassword(responseData.password);
+                    UserProfile.setOrganisations(responseData.organisations);
+                    navigate('/');
+                }
+                const request = new Requests();
+                request.postRequest('users/add', data, logIn, null, data.email, data.password);
+            }
+        }
+        
         // validate
-
+        
         var valid = true;
-
+        
         var email_pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if(userData.email === ''){
             console.log('email cannot be left blank');
@@ -42,28 +89,21 @@ function Signup() {
             emailError("Email is invalid");
         }
         else{emailError("");}
-
+        
         if(userData.name === ''){
             console.log("Name field left blank");
             valid = false;
             nameError("Name cannot be left blank");
         }
         else{nameError("");}
-
-        if(userData.organisation ===''){
-            console.log("Organisation field left blank");
-            valid = false;
-            orgError("Organisation cannot be left blank"); 
-        }
-        else{orgError("");}
-
+    
         if (userData.password != userData.confPassword){
             console.log('passwords dont match');
             valid = false;
             confError("Passwords do not match");
         }
         else{confError("");}
-
+        
         if (userData.password.length < 9){
             console.log('password too short');
             valid = false;
@@ -71,36 +111,36 @@ function Signup() {
         }
         else{passError("");}
 
-        //check organisation exists
-
-
-        console.log(
-            userData
-        )
-        
-        if (valid){
-            var data = {
-                name: userData.name,
-                email: userData.email,
-                password: userData.password,
-                organisations: [userData.organisation]
-            }
-            console.log('all good, sending post...')  
-            function logIn (responseData) {
-                UserProfile.setLoggedIn(true);
-                UserProfile.setName(responseData.name);
-                UserProfile.setEmail(responseData.email);
-                UserProfile.setPassword(responseData.password);
-                UserProfile.setOrganisations(responseData.organisations);
-                navigate('/');
-            }
-            const request = new Requests();
-            request.postRequest('users/add', data, logIn, null, data.email, data.password);
+        if(userData.organisation ===''){
+            console.log("Organisation field left blank");
+            valid = false;
+            orgError("Organisation cannot be left blank"); 
         }
+        else{
+            orgError("");
 
+            //check org that has been input exists
+
+            const request = new Requests();
+            const success = (responseData) =>{
+                if (responseData.length == 0){
+                    console.log('organisation does not exist')
+                    valid = false;
+                    orgError('That organisation does not exist!')
+                }else{
+                    userData.organisation = responseData[0].key;
+                    console.log(userData.organisation);
+                }
+                sendRequest()
+            }
+            request.getRequest(encodeURI(`organisations/search_orgs/${userData.organisation}`), success, sendRequest);
+        }
         
-    }
+        console.log(userData)
 
+    
+    }
+    
     return(
         <div className='cont'>
             <div className='flex'>
@@ -129,42 +169,14 @@ function Signup() {
 
                     <div className='inputCont'>
                         <span className='errorCont'>{organisation && <span className='organisation errorTag'>{organisation}</span>}</span>
-                        <input id='organisation' className='inputField' placeholder='Organisation' />
+                        <input id='organisation' className='inputField' placeholder='Organisation' onInput={(text) => {getOrgs(text)}} />
                     </div>
 
                 </div>
 
                 <div className='flex-bottom-fill'>
-                    <div className='searchSuggestCont'>
-                        <div className='searchSuggest'>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                            <div>hello</div>
-                        </div>
+                    <div className='searchSuggestCont' id='searchSuggestCont' style={{display: 'none'}}>
+                        <div className='searchSuggest' id='searchSuggest'></div>
                    </div>
                 </div>
 
@@ -174,6 +186,7 @@ function Signup() {
             </div>
         </div>
     )
+    
 }
 
 export default Signup;

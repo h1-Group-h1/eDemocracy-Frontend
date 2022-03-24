@@ -56,7 +56,7 @@ function Polls() {
                 function failPolls(responseData){
                     console.log('failed to get polls');
                 }
-                request.getRequest('polls', displayPolls, failPolls, UserProfile.getEmail, UserProfile.getPassword);
+                request.getRequest('polls', displayPolls, failPolls, UserProfile.getEmail, UserProfile.getPassword); // needs changing
             }
         
             getPolls()
@@ -75,6 +75,7 @@ function Polls() {
             <div className='flex'>
                 <div className='flex-top'>
                     <h1 className="h1">Polls</h1>
+                    <input id='pollsSearch' className='inputField' placeholder='Search...'/>
                     <div id='pollsCont' className='pollsCont'></div>
                 </div>
                 <div className='flex-bottom'>
