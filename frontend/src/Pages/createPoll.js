@@ -115,7 +115,7 @@ function CreatePoll() {
                     hours: 0,
                     minutes: 0
                 },
-                organisation_key: 'rf6cx8j38mc8', //change this to org key once database is changed, and add a selection for the user to select which org to use
+                organisation_key: 'to5rbwngcsg5', //change this to org key once database is changed, and add a selection for the user to select which org to use
                 choices: choices
             };
 
@@ -126,7 +126,7 @@ function CreatePoll() {
 
             const request = new Requests();
             console.log(UserProfile.getEmail(), UserProfile.getPassword())
-            request.postRequest('polls/add', data, success(), null, UserProfile.getEmail(), UserProfile.getPassword());
+            request.postRequest('polls/add', data, success(), ()=>{console.log('error adding poll')}, UserProfile.getEmail(), UserProfile.getPassword());
             
         }
     }
