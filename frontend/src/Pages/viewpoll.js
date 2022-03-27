@@ -12,27 +12,11 @@ function ViewPolls() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    function renderPage(){
-        ReactDOM.render(
-            <div className='flex'>
-                <div className='flex-top'>
-                    <h1 className="h1"><span id='pollName'>Loading</span></h1>
-                    <div className='pollDescr' id='pollOrg'>Organisation:</div>
-                    <div className='pollDescr' id='pollDescr'></div>
-                    <div className='pollDescr' id='pollAnon' style={{'fontStyle': 'italic'}}></div>
-                    <div className='pollDescr' id='creationDate'></div>
-                    <div className='pollDescr' id='expirationDate'></div>
-                    <div className='pollDescr'>Vote for your choice:</div>
-                </div>
-                <div className='flex-bottom-fill'>
-                    <div className='pollChoicesCont' id='choicesCont'></div>
-                </div>
-            </div>,
-            document.getElementById('page')
-        );
-
+    function runPage(){
+        
         const URLparams = new URLSearchParams(window.location.search);
         var pollKey = URLparams.get('poll');
+        console.log(pollKey);
 
         const request = new Requests();
         function displayPoll(poll){
@@ -65,13 +49,34 @@ function ViewPolls() {
                     function voteCallback(responseData){
                         console.log(responseData);
                     }
-                    voteRequest.postRequest(`polls/add_vote/${poll.key}/${choice.id}`, null, voteCallback, null, UserProfile.email, UserProfile.password);
+                    voteRequest.postRequest(`polls/add_vote/${poll.key}/${choice.id}`, null, voteCallback, null, UserProfile.getEmail(), UserProfile.getPassword());
                 });
                 choicesCont.appendChild(choiceBlock);
             });
 
         }
-        request.getRequest(`poll/${pollKey}`, displayPoll, null, UserProfile.getEmail, UserProfile.getPassword);
+        request.getRequest(`poll/${pollKey}`, displayPoll, null, UserProfile.getEmail(), UserProfile.getPassword());
+    }
+    
+    function renderPage(){
+        ReactDOM.render(
+            <div className='flex'>
+                <div className='flex-top'>
+                    <h1 className="h1"><span id='pollName'>Loading</span></h1>
+                    <div className='pollDescr' id='pollOrg'>Organisation:</div>
+                    <div className='pollDescr' id='pollDescr'></div>
+                    <div className='pollDescr' id='pollAnon' style={{'fontStyle': 'italic'}}></div>
+                    <div className='pollDescr' id='creationDate'></div>
+                    <div className='pollDescr' id='expirationDate'></div>
+                    <div className='pollDescr'>Vote for your choice:</div>
+                </div>
+                <div className='flex-bottom-fill'>
+                    <div className='pollChoicesCont' id='choicesCont'></div>
+                </div>
+            </div>,
+            document.getElementById('page'),
+            runPage
+        );
     }
     
     useEffect(()=>{    

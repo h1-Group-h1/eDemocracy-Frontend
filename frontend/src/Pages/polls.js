@@ -14,21 +14,8 @@ function Polls() {
     var checkPollsInterval;
     var polls = [];
 
-    function renderPage(){
-        ReactDOM.render(
-            <div className='flex'>
-                <div className='flex-top'>
-                    <h1 className="h1">Polls</h1>
-                    <input id='pollsSearch' className='inputField' placeholder='Search...' onInput={(text) => {searchPolls(text)}}/>
-                    <div id='pollsCont' className='pollsCont'></div>
-                </div>
-                <div className='flex-bottom'>
-                    <button className='button' onClick={() => {navigate("/createpoll" + location.search)}}>Create a Poll</button>
-                </div>
-            </div>,
-            document.getElementById('page')
-        );
-        
+    function runPage(){
+
         document.getElementById('pollsCont').innerHTML = '';
         
         // check for polls every 5 seconds
@@ -41,16 +28,33 @@ function Polls() {
         }
     }
     
+    function renderPage(){
+        ReactDOM.render(
+            <div className='flex'>
+                <div className='flex-top'>
+                    <h1 className="h1">Polls</h1>
+                    <input id='pollsSearch' className='inputField' placeholder='Search...' onInput={(text) => {searchPolls(text)}}/>
+                    <div id='pollsCont' className='pollsCont'></div>
+                </div>
+                <div className='flex-bottom'>
+                    <button className='button' onClick={() => {navigate("/createpoll" + location.search)}}>Create a Poll</button>
+                </div>
+            </div>,
+            document.getElementById('page'),
+            runPage
+        );
+    }
+    
     var getPolls = () => {
 
         const request = new Requests();
         function displayPolls(responseData){
             var pollsCont = document.getElementById('pollsCont');
-            var pollKeys = Array.from({length: polls.length}, (_, i) => polls[i].key);
-            // var displayedKeys = pollsCont.map((child)=>{return child.id});
-            // console.log(displayedKeys)
+            // var pollKeys = Array.from({length: polls.length}, (_, i) => polls[i].key);
+            var displayedKeys = Array.from(pollsCont.children).map((child)=>{return child.id});
+            console.log(displayedKeys)
             responseData.forEach(poll => {
-                if (!(pollKeys.includes(poll.key))){
+                if (!(displayedKeys.includes(poll.key))){
                     var pollBlock = document.createElement("div");
                     pollBlock.id = poll.key;
                     pollBlock.classList = "pollBlock";
@@ -64,16 +68,16 @@ function Polls() {
                     pollsCont.appendChild(pollBlock);
                 }
             });
-            var pollKeys = Array.from({length: responseData.length}, (_, i) => responseData[i].key);
-            polls.forEach(poll => {
-                if (!(pollKeys.includes(poll.key))){
-                    console.log('poll needs to be removed');
-                    var pollBlock = document.getElementById(poll.key);
-                    pollBlock.remove();
-                }
-            })
-            polls = responseData;
-            console.log(polls)
+            // var pollKeys = Array.from({length: responseData.length}, (_, i) => responseData[i].key);
+            // polls.forEach(poll => {
+            //     if (!(pollKeys.includes(poll.key))){
+            //         console.log('poll needs to be removed');
+            //         var pollBlock = document.getElementById(poll.key);
+            //         pollBlock.remove();
+            //     }
+            // })
+            // polls = responseData;
+            // console.log(polls)
         }
         function failPolls(responseData){
             console.log('failed to get polls');
@@ -127,8 +131,8 @@ function Polls() {
             const request = new Requests();
             request.getRequest(encodeURI(`polls/search_polls/${UserProfile.getOrganisations()}/${text}`), callback, null, UserProfile.getEmail(), UserProfile.getPassword());
         }else{
-            getPolls();
             cont.innerHTML= '';
+            getPolls();
             checkPollsInterval = setInterval(() => {getPolls()}, 5000);
         }
     }
