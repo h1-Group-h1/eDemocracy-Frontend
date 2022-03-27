@@ -20,9 +20,10 @@ function Signup() {
         const text = input.target.value;
         const cont = document.getElementById('searchSuggest');
         const contcont = document.getElementById('searchSuggestCont')
-        cont.innerHTML = '';
         contcont.style.display = 'none';
         const callback = (responseData) => {
+            console.log(responseData)
+            cont.innerHTML = '';
             responseData.forEach(element => {
                 const suggestion = document.createElement('div');
                 suggestion.innerHTML = element.name;
@@ -37,7 +38,7 @@ function Signup() {
         }
         if (text.length > 3){
             const request = new Requests();
-            request.getRequest(`organisations/search_orgs/${text}`, callback, null);
+            request.getRequest(encodeURI(`organisations/search_orgs/${text}`), callback, null);
         }
     }
     

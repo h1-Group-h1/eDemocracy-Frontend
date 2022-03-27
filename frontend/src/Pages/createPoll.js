@@ -126,7 +126,7 @@ function CreatePoll() {
 
             const request = new Requests();
             console.log(UserProfile.getEmail(), UserProfile.getPassword())
-            request.postRequest('polls/add', data, success(), ()=>{console.log('error adding poll')}, UserProfile.getEmail(), UserProfile.getPassword());
+            request.postRequest('polls/add', data, success, ()=>{console.log('error adding poll')}, UserProfile.getEmail(), UserProfile.getPassword());
             
         }
     }
