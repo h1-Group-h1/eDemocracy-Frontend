@@ -1,5 +1,5 @@
 var UserProfile = (function() {
-    const stor = window.localStorage;
+    const stor = window.sessionStorage;
     // var loggedIn = false;
     // var name = "";
     // var email = "";

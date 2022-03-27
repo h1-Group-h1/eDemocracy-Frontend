@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './/styles/common.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile from './userProfile';
 import {Requests} from './httpRequest';
+import { AutoLogin } from './autoLogin';
 
 function Polls() {
 
@@ -11,6 +13,33 @@ function Polls() {
     const location = useLocation();
     var checkPollsInterval;
     var polls = [];
+
+    function renderPage(){
+        ReactDOM.render(
+            <div className='flex'>
+                <div className='flex-top'>
+                    <h1 className="h1">Polls</h1>
+                    <input id='pollsSearch' className='inputField' placeholder='Search...' onInput={(text) => {searchPolls(text)}}/>
+                    <div id='pollsCont' className='pollsCont'></div>
+                </div>
+                <div className='flex-bottom'>
+                    <button className='button' onClick={() => {navigate("/createpoll" + location.search)}}>Create a Poll</button>
+                </div>
+            </div>,
+            document.getElementById('page')
+        );
+        
+        document.getElementById('pollsCont').innerHTML = '';
+        
+        // check for polls every 5 seconds
+        
+        getPolls()
+        checkPollsInterval = setInterval(() => {getPolls()}, 5000);
+        return () => {
+            console.log('clearing');
+            clearInterval(checkPollsInterval);
+        }
+    }
     
     var getPolls = () => {
 
@@ -52,22 +81,23 @@ function Polls() {
         request.getRequest(encodeURI(`polls/${UserProfile.getOrganisations()}`), displayPolls, failPolls, UserProfile.getEmail(), UserProfile.getPassword()); // needs changing
     }
 
-    useEffect(()=>{
-        document.getElementById('pollsCont').innerHTML = '';
+    useEffect(()=>{    
         if (!UserProfile.getLoggedIn()){
-            navigate('/login');
-        }else{
 
-            //get all polls
-        
-            // check for polls every 5 seconds
-        
-            getPolls()
-            checkPollsInterval = setInterval(() => {getPolls()}, 5000);
-            return () => {
-                console.log('clearing');
-                clearInterval(checkPollsInterval);
+            // try to login
+
+            function loginSuccess(){
+                renderPage()
             }
+            function loginFail(){
+                navigate('/login');
+            }
+
+            const autoLogin = new AutoLogin();
+            autoLogin.login(loginSuccess, loginFail);
+
+        }else{
+            renderPage()
         }
     })
 
@@ -107,19 +137,7 @@ function Polls() {
 
 
     return(
-        <div className='cont'>
-            <div className='flex'>
-                <div className='flex-top'>
-                    <h1 className="h1">Polls</h1>
-                    <input id='pollsSearch' className='inputField' placeholder='Search...' onInput={(text) => {searchPolls(text)}}/>
-                    <div id='pollsCont' className='pollsCont'></div>
-                </div>
-                <div className='flex-bottom'>
-                    <button className='button' onClick={() => {navigate("/createpoll" + location.search)}}>Create a Poll</button>
-                </div>
-            </div>
-
-        </div>
+        <div className='cont' id='page'></div>
     )
     
 }

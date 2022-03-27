@@ -4,6 +4,7 @@ import './/styles/common.css';
 // import './/styles/loginSignup.css';
 import {Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import UserProfile  from './userProfile';
+import UserCreds from './userCreds';
 import { Requests} from './httpRequest';
 
 function Login() {
@@ -45,6 +46,8 @@ function Login() {
                 UserProfile.setEmail(responseData.email);
                 UserProfile.setPassword(responseData.password);
                 UserProfile.setOrganisations(responseData.organisations);
+                UserCreds.setEmail(responseData.email);
+                UserCreds.setPassword(responseData.password);
                 console.log(responseData);
                 navigate('/');
             }
