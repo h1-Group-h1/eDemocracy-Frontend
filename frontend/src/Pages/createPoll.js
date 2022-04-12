@@ -18,6 +18,22 @@ function CreatePoll() {
     const[endDate, endDateError] = useState("");
     const[choices, choicesError] = useState("");
     
+    function addOrgOption(org){
+        const select = document.getElementById('organisations');
+        const organisation = document.createElement('option');
+        organisation.value = org.key;
+        organisation.innerHTML = org.name;
+        select.appendChild(organisation);
+    }
+    
+    function runPage(){
+        //get all organisation that user is a member of
+        const request = new Requests();
+        UserProfile.getOrganisations().forEach(key => {
+            request.getRequest(`organisations/${key}`, addOrgOption, ()=>{console.log('error getting org')}, UserProfile.getEmail(), UserProfile.getPassword());
+        });
+    }
+
     function renderPage(){
         ReactDOM.render(
             <div className='flex'>
@@ -29,6 +45,11 @@ function CreatePoll() {
                 <input id='name' className='inputField' placeholder='Name'/>
                 <br/>
                 <input id='description' className='inputField' placeholder='Description'/>
+                <br/>
+                <div className='dropdown'>
+                    <span>Organisation</span>
+                    <select id='organisations'></select>
+                </div>
                 <br/>
                 <div className='dropdown'>
                     <span>Anonymous: </span>
@@ -87,7 +108,8 @@ function CreatePoll() {
             <button className='button' onClick={()=>{createPoll()}}>Create Poll</button>
                 
         </div>,
-        document.getElementById('page')
+        document.getElementById('page'), 
+        runPage
         );
     }
     
@@ -116,7 +138,7 @@ function CreatePoll() {
         cont.classList = 'pollChoiceCont';
         const choiceBlock = document.createElement('input');
         choiceBlock.setAttribute('placeholder', 'Choice Name');
-        choiceBlock.classList = 'pollChoice inputField';
+        choiceBlock.classList = 'inputField pollChoice';
         
         const removeButton = document.createElement('div');
         removeButton.innerHTML = '<span></span><span></span>';
@@ -132,6 +154,7 @@ function CreatePoll() {
     function createPoll(){
         const name = document.getElementById('name').value;
         const desc = document.getElementById('description').value;
+        const org = document.getElementById('organisations').value;
         const anon = document.getElementById('anonymous').value;
         const imStart = document.getElementById('immediateStartCheck').checked;
         var startDate = document.getElementById('date').value;
@@ -202,9 +225,10 @@ function CreatePoll() {
                     hours: 0,
                     minutes: 0
                 },
-                organisation_key: UserProfile.getOrganisations(),
+                organisation_key: org,
                 choices: choices
             };
+            console.log(data)
 
             const success = (responseData)=>{
                 alert('Success');

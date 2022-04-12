@@ -184,10 +184,11 @@ html, body, .root{
 }
 
 .pollChoiceCont{
+    width: 90%;
     height: 3em;
 }
 .pollChoice{
-    width: 90%;
+    width: 100%;
     background-color: var(--contColour);
     border-radius: 1em;
     padding: 10px 0;
@@ -199,12 +200,20 @@ html, body, .root{
     border-color: var(--buttonBorderColour);
 
 }
-.pollChoiceCont:hover .pollChoice{
+.pollChoice:hover{
     background-color: #ffffff;
     border-color: #66798b;
     cursor: pointer;
-}.pollChoice:active{
+}
+.pollChoice:active{
     border-style: solid;
+}
+.pollChoiceCont input:checked ~ .pollChoice{
+    background-color: #ffffff;
+    border-color: #66798b;
+}
+.pollChoiceCont input.pollChoiceRadio{
+    display: none;
 }
 
 .pollChoicesCont{

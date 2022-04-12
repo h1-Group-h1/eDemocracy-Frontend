@@ -11,11 +11,13 @@ function ViewPolls() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    // var choiceID;
+    var pollKey;
 
     function runPage(){
         
         const URLparams = new URLSearchParams(window.location.search);
-        var pollKey = URLparams.get('poll');
+        pollKey = URLparams.get('poll');
         console.log(pollKey);
 
         const request = new Requests();
@@ -23,11 +25,12 @@ function ViewPolls() {
             console.log(poll);
             
             document.getElementById('pollName').innerHTML = poll.name;
-            const request = new Requests();
-            function getOrg(responseData){
-                document.getElementById('pollOrg').innerHTML = `Organisation: <a href="${window.location.origin + '/organisation?key=' + poll.organisation_key}">` + responseData.name + "</a>";
-            }
-            request.getRequest(`organisations/${poll.organisation_key}`, getOrg, null, UserProfile.email, UserProfile.password);
+            // const request = new Requests();
+            // function getOrg(responseData){
+            //     document.getElementById('pollOrg').innerHTML = `Organisation: <a href="${window.location.origin + '/organisation?key=' + poll.organisation_key}">` + responseData.name + "</a>";
+            // }
+            // request.getRequest(`organisations/${poll.organisation_key}`, getOrg, null, UserProfile.email, UserProfile.password);
+            document.getElementById('pollOrg').innerHTML = `Organisation: <a href="${window.location.origin + '/organisation?key=' + poll.organisation_key}">` + poll.organisation_name + "</a>";
             document.getElementById('pollDescr').innerHTML = poll.description;
             if (poll.anonymous){
                 document.getElementById('pollAnon').innerHTML = "The creator cannot see who has responded to this poll.";
@@ -38,24 +41,49 @@ function ViewPolls() {
             document.getElementById('expirationDate').innerHTML = `Ends:<br/>${String(poll.end_time.day).padStart(2, 0)}/${String(poll.end_time.month).padStart(2, 0)}/${String(poll.end_time.year).padStart(4, 0)} ${String(poll.end_time.hours).padStart(2, 0)}:${String(poll.end_time.minutes).padStart(2, 0)}`;
 
             const choicesCont = document.getElementById('choicesCont');
+            choicesCont.innerHTML = '';
             poll.choices.forEach(choice => {
+                const choiceCont = document.createElement('label');
+                const choiceInput = document.createElement('input');
                 const choiceBlock = document.createElement('div');
+                choiceInput.type = 'radio';
+                choiceInput.name = 'pollChoiceRadio';
+                choiceInput.classList = 'pollChoiceRadio';
                 choiceBlock.innerHTML = choice.description;
-                choiceBlock.classList = 'pollChoice';
-                choiceBlock.id = choice.id;
-                choiceBlock.addEventListener('click', ()=>{
-                    // add vote 
-                    const voteRequest = new Requests();
-                    function voteCallback(responseData){
-                        console.log(responseData);
-                    }
-                    voteRequest.postRequest(`polls/add_vote/${poll.key}/${choice.id}`, null, voteCallback, null, UserProfile.getEmail(), UserProfile.getPassword());
-                });
-                choicesCont.appendChild(choiceBlock);
+                choiceCont.classList = 'pollChoiceCont';
+                choiceBlock.classList = 'pollChoice'
+                choiceInput.id = `{"choiceID": ${choice.id}}`;
+                choiceCont.appendChild(choiceInput);
+                choiceCont.appendChild(choiceBlock);
+                // choiceBlock.addEventListener('click', ()=>{
+                //     choiceID = choice.id;
+                // });
+                choicesCont.appendChild(choiceCont);
             });
 
         }
         request.getRequest(`poll/${pollKey}`, displayPoll, null, UserProfile.getEmail(), UserProfile.getPassword());
+    }
+
+    function sumbitVote(){
+
+        // get vote from radio
+
+        const radios = document.getElementsByName('pollChoiceRadio');
+        const selectedRadio = Array.from(radios).filter((radio) => {return radio.checked});
+        
+        if (selectedRadio.length == 1){
+            const choiceID = JSON.parse(selectedRadio[0].id).choiceID;
+
+            // add vote
+            const voteRequest = new Requests();
+            function voteCallback(responseData){
+                console.log(responseData);
+            }
+            voteRequest.postRequest(`polls/add_vote/${pollKey}/${choiceID}`, {}, voteCallback, null, UserProfile.getEmail(), UserProfile.getPassword());
+
+        }
+
     }
     
     function renderPage(){
@@ -72,6 +100,9 @@ function ViewPolls() {
                 </div>
                 <div className='flex-bottom-fill'>
                     <div className='pollChoicesCont' id='choicesCont'></div>
+                </div>
+                <div className='flex-bottom'>
+                    <button className='button' onClick={() => {sumbitVote()}}>Submit</button>
                 </div>
             </div>,
             document.getElementById('page'),

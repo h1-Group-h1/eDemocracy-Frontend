@@ -82,7 +82,9 @@ function Polls() {
         function failPolls(responseData){
             console.log('failed to get polls');
         }
-        request.getRequest(encodeURI(`polls/${UserProfile.getOrganisations()}`), displayPolls, failPolls, UserProfile.getEmail(), UserProfile.getPassword()); // needs changing
+        UserProfile.getOrganisations().forEach(key=>{
+            request.getRequest(encodeURI(`polls/${key}`), displayPolls, failPolls, UserProfile.getEmail(), UserProfile.getPassword()); // needs changing
+        })
     }
 
     useEffect(()=>{    
@@ -129,7 +131,9 @@ function Polls() {
         }
         if (text.length > 3){
             const request = new Requests();
-            request.getRequest(encodeURI(`polls/search_polls/${UserProfile.getOrganisations()}/${text}`), callback, null, UserProfile.getEmail(), UserProfile.getPassword());
+            UserProfile.getOrganisations().forEach(key=>{
+                request.getRequest(encodeURI(`polls/search_polls/${key}/${text}`), callback, null, UserProfile.getEmail(), UserProfile.getPassword());
+            })
         }else{
             cont.innerHTML= '';
             getPolls();

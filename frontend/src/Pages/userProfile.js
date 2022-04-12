@@ -19,8 +19,8 @@ var UserProfile = (function() {
         return stor.getItem('password');
     }
     var getOrganisations = () => {
-        // return JSON.parse(stor.getItem('organisations'));
-        return stor.getItem('organisations');
+        return JSON.parse(stor.getItem('organisations'));
+        // return stor.getItem('organisations');
     }
 
     var setLoggedIn = function(data){
@@ -36,7 +36,7 @@ var UserProfile = (function() {
         stor.setItem('password', data);
     }
     var setOrganisations = (data) => {
-        stor.setItem('organisations', data);
+        stor.setItem('organisations', JSON.stringify(data));
     }
 
     return {
